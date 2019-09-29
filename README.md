@@ -1,4 +1,4 @@
-# Robotic_bull
+# Robotic bull
 Created for a new solution of bullfight, using arduino
 ## Used sensors
 - HC-SR04
