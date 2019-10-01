@@ -79,7 +79,7 @@ void loop() {
 //  Control LED 2
   digitalWrite(LedUltrasonic2, ledOn(cmMsec2, false));
 
-  if(time >= 5000){
+//  if(time >= 1000){
 //  In development
 //      Control Servo
 //    if(servoFunc){
@@ -95,7 +95,7 @@ void loop() {
 //    Control Led 3
     digitalWrite(LedInfra, ledOn(dis, true));
     time = 0;
-  }
+//  }
 }
 
 bool ledOn (double dis, bool infra) {
