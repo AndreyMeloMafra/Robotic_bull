@@ -6,7 +6,7 @@ Created for a new solution of bullfight, using arduino
 ## Motors
 - MicroServo DXW90 9g
 
-##Group:
+## Group:
 - Andrey Melo Mafra
 - Ryan Rangel da Silva Barros
 - Ricardo Bandeira Ferraz Filho
