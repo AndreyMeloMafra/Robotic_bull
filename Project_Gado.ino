@@ -13,15 +13,15 @@
 #define pino_trigger2 9
 #define pino_echo2 8
 
-//  Led
-#define LedUltrasonic1 2
-#define LedUltrasonic2 0
-#define LedInfra 1
+//    Led
+#define LedUltrasonic1 12
+#define LedUltrasonic2 11
+#define LedInfra 10
 
-//  Servo pin
-#define pinoServo 11
+//    Servo pin
+#define pinoServo 13
 
-//  Sharp pin
+//    Sharp pin
 #define pinoAnalogico A2
 #define model 20150
 
@@ -29,7 +29,7 @@
 Servo serv; 
 int pos; 
 
-bool senseServo = true;
+bool servoFunc = true;
 
 double dis;
 
@@ -47,7 +47,7 @@ void setup() {
   Serial.println("Lendo dados do sensor...");
 
   serv.attach(pinoServo); 
-  serv.write(0);
+  serv.write(6);
 
   //Initial state for pins
   pinMode(LedUltrasonic1, OUTPUT);
@@ -57,70 +57,57 @@ void setup() {
   //Initial values for leds
   digitalWrite(LedUltrasonic1, LOW);
   digitalWrite(LedUltrasonic2, LOW);
-  digitalWrite(LedInfra, HIGH);
+  digitalWrite(LedInfra, LOW);
 }
 
 void loop() {
   float cmMsec, cmMsec2;
 
   time = millis();
-  Serial.println(time);
 
   long microsec = ultrasonic1.timing();
   cmMsec = ultrasonic1.convert(microsec, Ultrasonic::CM);
 
-//  long microsec2 = ultrasonic2.timing();
-//  cmMsec2 = ultrasonic2.convert(microsec2, Ultrasonic::CM);
+  long microsec2 = ultrasonic2.timing();
+  cmMsec2 = ultrasonic2.convert(microsec2, Ultrasonic::CM);
 
-  Serial.print("Sensor 01: ");
-  Serial.print(cmMsec);
-  Serial.println("cm");
-//  Serial.print("Sensor 02: " + cmMsec2 + "cm");
+  Serial.println(cmMsec2);
   
 //  Control Led 1
-  digitalWrite(LedUltrasonic1, ledOn(cmMsec));
+  digitalWrite(LedUltrasonic1, ledOn(cmMsec, false));
 
 //  Control LED 2
-//  digitalWrite(LedUltrasonic2, ledOn(cmMsec2));
+  digitalWrite(LedUltrasonic2, ledOn(cmMsec2, false));
 
-  if(time >= (time + 1000)){
-    //  Control Servo
-    controlServo(senseServo);
-      
+  if(time >= 5000){
+//  In development
+//      Control Servo
+//    if(servoFunc){
+//      servoFunc = false;
+//      controlServo();
+//    }
+
     //Control infra
     dis = infraCode();
     Serial.print(dis);
     Serial.println("cm");
-    
-    //  digitalWrite(LedInfra, ledOn(dis);
+
+//    Control Led 3
+    digitalWrite(LedInfra, ledOn(dis, true));
+    time = 0;
   }
-  
 }
 
-bool ledOn (double dis) {
+bool ledOn (double dis, bool infra) {
   bool led = false;
   
-  if(dis <= 30){
-    led= true;
+  if(dis <= 50 && !infra){
+    led = true;
+  } else if(dis <= 20 && infra) {
+    led = true;
   }
 
   return led;
-}
-
-void controlServo(bool sense) {
-  if(sense) {
-      for(pos = 6; pos < 180; pos++){
-        if(time >= 15){
-          serv.write(pos);
-        } 
-      }
-  } else {
-      for(pos = 180; pos >= 6; pos--){ 
-        if(time >= 15){
-          serv.write(pos);
-        } 
-      }
-  }
 }
 
 double infraCode() {
@@ -129,3 +116,26 @@ double infraCode() {
 
   return distancia;
 }
+
+//In development
+//void controlServo() {
+//    unsigned long count;
+//    count = millis();
+//    
+//    for(pos = 6; pos < 180; pos++){
+//      if(count >= 15){
+//        serv.write(pos);
+//        delay(15); 
+//        count = 0;
+//      } 
+//    }
+//      
+//  if(time >= 2000){
+//    for(pos = 180; pos >= 6; pos--){ 
+//      if(time >= 15){
+//        serv.write(6);
+//      } 
+//    }
+//    servoFunc = true;
+//  }
+//}
